@@ -6,7 +6,7 @@
   "scripts": {
     "client": "npm start ./minesweeper-client/",
     "server": "npm start ./minesweeper-api/",
-    "start": "concurrently \"npm run server\" \"npm run client"
+    "start": "concurrently \"npm run server\" \"npm run client\""
   },
   "repository": {
     "type": "git",
