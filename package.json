@@ -1,0 +1,24 @@
+{
+  "name": "mineswheeper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "client": "npm start ./minesweeper-client/",
+    "server": "npm start ./minesweeper-api/",
+    "start": "concurrently \"npm run server\" \"npm run client"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ricardogcolombo/minesweeper.git"
+  },
+  "author": "Ricardo Colombo <ricardogcolombo@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ricardogcolombo/minesweeper/issues"
+  },
+  "homepage": "https://github.com/ricardogcolombo/minesweeper#readme",
+  "dependencies": {
+    "concurrently": "^5.3.0"
+  }
+}

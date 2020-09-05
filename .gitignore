@@ -1,5 +1,8 @@
 minesweeper-client/node_modules
 minesweeper-api/.env.dev
 minesweeper-api/node_modules/
+node_modules/
 tags
 tags.*
+./*/tags.*
+./*/tags
