@@ -2,7 +2,7 @@ const pool = require("../db/index");
 
 const createGame = (req, res, next) => {
     let {size, mines} = req.body;
-    console.log(req);
+    console.log(req.body);
 
     let newCells = new Array(size * size).fill().map((item, index) =>
         Object.assign(
@@ -21,16 +21,41 @@ const createGame = (req, res, next) => {
 
     res.send({size, mines, board: newCells});
 };
-const getGame = async (req, res, next) => {
-    const {id} = req.params;
+const getAllGames = async (req, res, next) => {
+    const {userid} = req.query;
     try {
         pool.getConnection()
             .then((conn) => {
-                const query = `select t.userid,t.gameid,t.size,t.time,g.id,g.flag,g.mine,g.visible,g.value from test.usergames t inner join test.games g on g.userid = t.userid and t.gameid = g.gameid where t.userid=${id}`;
+                const query = `select t.userid,t.gameid,t.size,t.time from test.usergames t where t.userid=${userid}`;
                 console.log(query);
                 conn.query(query)
                     .then((rows) => {
-                        console.log(rows); //[ {val: 1}, meta: ... ]
+                        res.send(rows);
+                    })
+                    .catch((err) => {
+                        //handle error
+                        console.log(err);
+                        next(err);
+                    });
+            })
+            .catch((err) => {
+                next(err);
+            });
+    } catch (e) {
+        res.status(404);
+    }
+};
+
+const getGame = async (req, res, next) => {
+    const {id} = req.params;
+    const {userid} = req.query;
+    try {
+        pool.getConnection()
+            .then((conn) => {
+                const query = `select t.userid,t.gameid,t.size,t.time,g.id,g.flag,g.mine,g.visible,g.value from test.usergames t inner join test.games g on g.userid = t.userid and t.gameid = g.gameid where t.userid=${userid} and t.gameid = ${id}`;
+                console.log(query);
+                conn.query(query)
+                    .then((rows) => {
                         const game = {};
                         if (rows.length > 0) {
                             game.size = rows[0].size;
@@ -51,10 +76,10 @@ const getGame = async (req, res, next) => {
                     });
             })
             .catch((err) => {
-                //not connected
+                next(err); //not connected
             });
     } catch (e) {
-        res.status(404);
+        next(err);
     }
 };
 
@@ -67,7 +92,7 @@ const saveGame = (req, res, next) => {
             return conn.query(`SELECT MAX(gameid) as gameid from usergames where userid=${userid}`);
         })
         .then(([{gameid}]) => {
-            let newGameId = gameid || 1;
+            let newGameId = (gameid || 0) + 1;
             try {
                 let sql = "INSERT INTO games(userid, gameid,id,flag,mine,visible, value) VALUES (?,?,?,?,?,?,?)";
                 let values = board.map(({id, flag, mine, visible, value}) => [
@@ -88,11 +113,11 @@ const saveGame = (req, res, next) => {
             } catch (err) {
                 conn.rollback();
                 console.log(err);
-                res.status(500);
+                next(err);
             } //handle
         })
         .catch((err) => {
-            console.log(err);
+            next(err);
         });
 };
 
@@ -161,4 +186,4 @@ const getNearBombs = (cells, size, key) => {
 
     return value;
 };
-module.exports = {saveGame, createGame, getGame};
+module.exports = {getAllGames, saveGame, createGame, getGame};
