@@ -9,5 +9,6 @@ module.exports = {
     HOST: process.env.HOST || "0.0.0.0",
     DB_USER:process.env.DB_USER,
     DB_HOST:process.env.DB_HOST,
-    DB_PASS:process.env.DB_PASS
+    DB_PASS:process.env.DB_PASS,
+    DB_NAME:process.env.DB_NAME
 };
