@@ -1,4 +1,4 @@
-import React, {useState, useContext} from "react";
+import React, {useState, useContext, useEffect} from "react";
 import {Input, Button, Radio, Row, Col} from "antd";
 import {StateContext} from "../../context/index";
 import {useHistory} from "react-router-dom";
@@ -6,15 +6,30 @@ import {useHistory} from "react-router-dom";
 const CreateGame = () => {
     const {
         state: {userid},
+        dispatch
     } = useContext(StateContext);
-    const [size, setSize] = useState(0);
-    const [mines, setMines] = useState(0);
+    const [size, setSize] = useState(8);
+    const [mines, setMines] = useState(8);
+    const [gameId, setGameId] = useState(0);
     const history = useHistory();
     const onClickStart = () => {
+        dispatch({type:'SET_GAMEINFO',payload:{gameinfo:{
+            gameId,
+            time:0,
+            size,
+            userid,
+            mines,
+        }}})
         history.push("/Game");
     };
 
-    const onClickLoad = () => {};
+    const onClickLoad = () => {
+        dispatch({type:'SET_GAMEINFO',payload:{gameinfo:{
+            gameId,
+            userid,
+        }}})
+        history.push("/Game");
+    };
 
     const sizeOptions = [
         {label: "4x4", value: 4},
@@ -23,9 +38,10 @@ const CreateGame = () => {
     ];
 
     const minesOptions = [
-        {label: "4x4", value: 4},
-        {label: "8x8", value: 8},
-        {label: "10x10", value: 10},
+        {label: "4", value: 4},
+        {label: "8", value: 8},
+        {label: "10", value: 10},
+        {label: "16", value: 16},
     ];
     const onChangeSize = (e) => {
         setSize(e.target.value);
@@ -34,6 +50,9 @@ const CreateGame = () => {
         setMines(e.target.value);
     };
 
+    const onChangeID = (e)=>{
+        setGameId(e.target.value)
+    }
     // {userid && (
     const style = { background: '#0092ff', padding: '8px 0' };
     return (
@@ -57,7 +76,7 @@ const CreateGame = () => {
                     <Row gutter={[16, 24]}>
                         <Col span={12}>
                             ID:
-                            <Input placeholder="Type the game ID" />
+                            <Input value={gameId} onChange={onChangeID} placeholder="Type the game ID" />
                         </Col>
                         <Col span={12}>
                             <Button type="primary" onClick={onClickLoad} block>

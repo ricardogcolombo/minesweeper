@@ -36,6 +36,7 @@ const Login = (props) => {
             buttonText="Login with Google"
             onSuccess={login}
             onFailure={handleLoginFailure}
+            isSignedIn={true}
             cookiePolicy={"single_host_origin"}
             responseType="code,token"
         />

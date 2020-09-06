@@ -9,7 +9,7 @@ let reducer = (state, {type, payload}) => {
 		case 'SET_USER':
 			return { ...state, userid: payload.userid};
         case 'SET_GAMEINFO':
-			return { ...state, gameinfo: payload.mines};
+			return { ...state, gameinfo: payload.gameinfo};
 		default:
 			return;
 	}
