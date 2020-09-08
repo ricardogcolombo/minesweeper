@@ -22,23 +22,28 @@ const createGame = (req, res, next) => {
     res.send({size, mines, board: newCells});
 };
 const getAllGames = async (req, res, next) => {
-    const {userid} = req.query;
+    const {tokenId} = req.body;
+    console.log(req.headers);
+    console.log(req.body);
     try {
         pool.getConnection()
             .then((conn) => {
-                const query = `select t.userid,t.gameid,t.size,t.time from test.usergames t where t.userid=${userid}`;
+                const query = `select * from test.usergames where userid=${userid}`;
                 console.log(query);
                 conn.query(query)
                     .then((rows) => {
+                        conn.end();
                         res.send(rows);
                     })
                     .catch((err) => {
+                        conn.end();
                         //handle error
                         console.log(err);
                         next(err);
                     });
             })
             .catch((err) => {
+                conn.end();
                 next(err);
             });
     } catch (e) {
@@ -66,16 +71,22 @@ const getGame = async (req, res, next) => {
 
                                 return others;
                             });
+                            res.send(game);
+                            conn.end();
+                        } else {
+                            conn.end();
+                            res.status(404);
+                            res.send("game not found");
                         }
-                        res.send(game);
                     })
                     .catch((err) => {
                         //handle error
-                        console.log(err);
                         conn.end();
+                        next(err);
                     });
             })
             .catch((err) => {
+                conn.end();
                 next(err); //not connected
             });
     } catch (e) {
@@ -86,39 +97,46 @@ const getGame = async (req, res, next) => {
 const saveGame = (req, res, next) => {
     const {size, mines, time, userid, board} = req.body;
     let conn;
-    pool.getConnection()
-        .then((connection) => {
-            conn = connection;
-            return conn.query(`SELECT MAX(gameid) as gameid from usergames where userid=${userid}`);
-        })
-        .then(([{gameid}]) => {
-            let newGameId = (gameid || 0) + 1;
-            try {
-                let sql = "INSERT INTO games(userid, gameid,id,flag,mine,visible, value) VALUES (?,?,?,?,?,?,?)";
-                let values = board.map(({id, flag, mine, visible, value}) => [
-                    userid,
-                    newGameId,
-                    id,
-                    flag,
-                    mine,
-                    visible,
-                    value === undefined ? null : value,
-                ]);
-                conn.beginTransaction();
-                conn.query("INSERT INTO usergames VALUE (?,?,?,?)", [userid, newGameId, size, time]);
-                conn.batch(sql, values);
+    try {
+        pool.getConnection()
+            .then((connection) => {
+                conn = connection;
+                return conn.query(`SELECT MAX(gameid) as gameid from usergames where userid=${userid}`);
+            })
+            .then(([{gameid}]) => {
+                let newGameId = (gameid || 0) + 1;
+                try {
+                    let sql = "INSERT INTO games(userid, gameid,id,flag,mine,visible, value) VALUES (?,?,?,?,?,?,?)";
+                    let values = board.map(({id, flag, mine, visible, value}) => [
+                        userid,
+                        newGameId,
+                        id,
+                        flag,
+                        mine,
+                        visible,
+                        value === undefined ? null : value,
+                    ]);
+                    conn.beginTransaction();
+                    conn.query("INSERT INTO usergames VALUE (?,?,?,?)", [userid, newGameId, size, time]);
+                    conn.batch(sql, values);
 
-                conn.commit();
-                res.send("success");
-            } catch (err) {
-                conn.rollback();
-                console.log(err);
+                    conn.commit();
+                    conn.end();
+                    res.send("success");
+                } catch (err) {
+                    conn.rollback();
+                    conn.end();
+                    console.log(err);
+                    next(err);
+                } //handle
+            })
+            .catch((err) => {
+                conn.end();
                 next(err);
-            } //handle
-        })
-        .catch((err) => {
-            next(err);
-        });
+            });
+    } catch (er) {
+        next(er);
+    }
 };
 
 const plantMines = (cells, size, mines) => {

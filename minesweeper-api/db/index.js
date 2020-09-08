@@ -5,7 +5,7 @@ const connectionDetails = {
      user:DB_USER, 
      password: DB_PASS,
      database:DB_NAME,
-     connectionLimit: 5
+     connectionLimit: 100
 }
 const pool = mariadb.createPool(connectionDetails);
 module.exports = pool;
