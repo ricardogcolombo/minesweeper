@@ -1,33 +1,24 @@
-import React, {useState, useContext, useEffect} from "react";
-import {Input, Button, Radio, Row, Col} from "antd";
+import React, {useState, useContext} from "react";
+import { Button, Radio, Row, Col} from "antd";
 import {StateContext} from "../../context/index";
 import {useHistory} from "react-router-dom";
 
 const CreateGame = () => {
     const {
-        state: {userid},
+        state: {tokenId},
         dispatch
     } = useContext(StateContext);
     const [size, setSize] = useState(8);
     const [mines, setMines] = useState(8);
-    const [gameId, setGameId] = useState(0);
+    const [gameId] = useState(0);
     const history = useHistory();
     const onClickStart = () => {
         dispatch({type:'SET_GAMEINFO',payload:{gameinfo:{
             gameId,
             time:0,
             size,
-            userid,
             mines,
-        }}})
-        history.push("/Game");
-    };
-
-    const onClickLoad = () => {
-        dispatch({type:'SET_GAMEINFO',payload:{gameinfo:{
-            gameId,
-            userid,
-        }}})
+        },tokenId}})
         history.push("/Game");
     };
 
@@ -50,14 +41,9 @@ const CreateGame = () => {
         setMines(e.target.value);
     };
 
-    const onChangeID = (e)=>{
-        setGameId(e.target.value)
-    }
-    // {userid && (
-    const style = { background: '#0092ff', padding: '8px 0' };
     return (
         <div>
-            {userid&&
+            {tokenId&&
                 <div>
                     <Row gutter={[16, 24]}>
                         <Col span={12}>
@@ -70,17 +56,6 @@ const CreateGame = () => {
                         <Col span={24}>
                             <Button type="primary" onClick={onClickStart} block>
                                 START NEW GAME
-                            </Button>
-                        </Col>
-                    </Row>
-                    <Row gutter={[16, 24]}>
-                        <Col span={12}>
-                            ID:
-                            <Input value={gameId} onChange={onChangeID} placeholder="Type the game ID" />
-                        </Col>
-                        <Col span={12}>
-                            <Button type="primary" onClick={onClickLoad} block>
-                                Load Game
                             </Button>
                         </Col>
                     </Row>

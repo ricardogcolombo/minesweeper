@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {CellStyled} from "./styled";
+import {CellStyled, CellContent} from "./styled";
 
 const Cell = (props) => {
     const {onClick, onContextMenu, flag, value, mine, visible, id} = props;
@@ -9,9 +9,6 @@ const Cell = (props) => {
         let newValue = "";
         if (!visible) {
             //TODO REMOVE THIS
-            // if (mine) {
-            //     newValue= "💣";
-            // }
             if (flag) {
                 newValue = "🚩";
             }
@@ -35,7 +32,7 @@ const Cell = (props) => {
     };
     return (
         <CellStyled onClick={onClickCell} onContextMenu={onRightClick} visible={visible} flag={flag} mine={mine}>
-            {content}
+            <CellContent>{content!==0&&content}</CellContent>
         </CellStyled>
     );
 };

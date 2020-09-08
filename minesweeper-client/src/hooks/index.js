@@ -1,13 +1,25 @@
 // TODO MOVE TO .ENV
-const BASE_URL = "http://localhost:5000/api/v1";
-export const getGame = async ({gameinfo, userid}) => {
+const BASE_URL = process.env.REACT_APP_BE_HOST;
+
+export const getGames = async (tokenId) => {
+    const response = await fetch(`${BASE_URL}/game`, {
+        method: "GET", // *GET, POST, PUT, DELETE, etc.
+        headers: getHeaders(tokenId),
+    });
+    return await response.json();
+};
+const getHeaders = (tokenId) => {
+    return {
+        "Content-Type": "application/json",
+        tokenId: tokenId,
+    };
+};
+export const getGame = async ({gameinfo, tokenId}) => {
     let response;
     if (gameinfo.gameId) {
-        response = await fetch(`${BASE_URL}/game/${gameinfo.gameId}?userid=${userid}`, {
+        response = await fetch(`${BASE_URL}/game/${gameinfo.gameId}`, {
             method: "GET", // *GET, POST, PUT, DELETE, etc.
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: getHeaders(tokenId),
         });
     } else {
         response = await fetch(`${BASE_URL}/createGame`, {
@@ -22,13 +34,6 @@ export const getGame = async ({gameinfo, userid}) => {
         });
     }
     const json = await response.json();
-    if (response.status === 500) {
-        console.log("Error Arreglar!");
-        return {
-            size: 8,
-            mines: 8,
-        };
-    }
     const mines = getMines(json.board);
     return {
         gameId: json.gameid,
@@ -46,15 +51,12 @@ const getMines = (board) => {
         }
     }, 0);
 };
-export const saveGame = async ({gameinfo, userid}) => {
+export const saveGame = async ({gameinfo, tokenId}) => {
     const mines = getMines(gameinfo.board);
     let response = await fetch(`${BASE_URL}/game`, {
         method: "POST", // *GET, POST, PUT, DELETE, etc.
-        headers: {
-            "Content-Type": "application/json",
-        },
+        headers: getHeaders(tokenId),
         body: JSON.stringify({
-            userid: userid,
             size: gameinfo.size,
             mines: mines,
             board: gameinfo.board,

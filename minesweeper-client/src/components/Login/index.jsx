@@ -13,17 +13,17 @@ const Login = (props) => {
             }),
         });
         data = await data.json();
-        dispatch({type: "SET_USER", payload: {userid: data.id}});
+        console.log(data)
+        dispatch({type: "SET_USER", payload: {tokenId: data.id}});
     };
     const logout = () => {
 
-        dispatch({type: "SET_USER", payload: {userid: null}});
+        dispatch({type: "SET_USER", payload: {tokenId: null}});
 
     };
     const handleLoginFailure = (e) => {};
     const handleLogoutFailure = (e) => {};
-    console.log(process.env)
-    const loginButton = state.userid? (
+    const loginButton = state.tokenId? (
         <GoogleLogout
             clientId={process.env.REACT_APP_GOOGLE_API}
             buttonText="Logout"

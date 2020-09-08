@@ -3,14 +3,20 @@ import styled from "styled-components";
 export const CellStyled = styled.div`
     display: flex;
     text-align: center;
-    border-radious:30px;
+    border-radius: 5px;
+    font-size: 150%;
     background-color: ${(props) => {
         const {visible} = props;
-        let color = `grey`;
+        let color = `#444`;
 
         if (visible) {
-            color = `white`;
+            color = `#fff`;
         }
         return color
     }};
 `;
+
+export const CellContent = styled.div`
+    margin:auto;
+`;
+

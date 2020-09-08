@@ -1,13 +1,13 @@
 import React, {useReducer} from "react";
 
-const initialState = {userid:null,gameinfo:{id:null,size:null,mines:null,board:null}};
+const initialState = {tokenId:null,gameinfo:{id:null,size:null,mines:null,board:null}};
 
 let reducer = (state, {type, payload}) => {
     console.log({payload,type});
 
 	switch (type) {
 		case 'SET_USER':
-			return { ...state, userid: payload.userid};
+			return { ...state, tokenId: payload.tokenId};
         case 'SET_GAMEINFO':
 			return { ...state, gameinfo: payload.gameinfo};
 		default:
