@@ -1,15 +1,27 @@
 const express = require("express");
 var game= require('./api/game');
-const config=  require('./config')
+var auth= require('./api/auth');
+const config = require("./config");
 const app = express();
-const middleware = require('./middleware')
-const cors = require('cors')
+const {initBasicMiddleware} = require("./middleware");
+const cors = require("cors");
 
-middleware(app,config.HOST,config.PORT);
+app.use(cors({
+  origin: "http://localhost:3000"
+}));
+initBasicMiddleware(app, config.HOST, config.PORT);
+
 app.use('/api/v1',game)
-app.use(cors())
-app.use(function(error, req, res, next) {
-    if (error.message.indexOf('Client')>-1 ) {
+app.use('/api/v1',auth)
+
+
+app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Headers", "x-access-token, Origin, Content-Type, Accept");
+    next();
+});
+
+app.use(function (error, req, res, next) {
+    if (error.message.indexOf("Client") > -1) {
         res.status(404);
     } else {
         res.status(500);
@@ -20,4 +32,4 @@ app.use(function(error, req, res, next) {
     });
 });
 
-module.exports= app
+module.exports = app;
