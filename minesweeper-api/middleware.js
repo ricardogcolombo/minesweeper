@@ -16,7 +16,7 @@ const initBasicMiddleware= (app, HOST, PORT) =>{
                 servers: [`http://${HOST}:${PORT}/api/v1`],
             },
         },
-        apis: ["api/api.js"],
+        apis: ["api/auth.js","api/game.js"],
     };
     const swaggerDoc = swaggerJsDoc(swaggerOps);
     app.use(bodyParser.json());
