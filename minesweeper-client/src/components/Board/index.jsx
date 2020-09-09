@@ -101,7 +101,7 @@ const Board = () => {
 
     return (
         <BoardContainerStyled>
-            <div>{time && <TimerStyled>{`Time: ${Math.trunc(time / 60)} min:${time % 60} sec`}</TimerStyled>}</div>
+            <TimerStyled>{time&&<div>{`Time: ${Math.trunc(time / 60)} min:${time % 60} sec`}</div>}</TimerStyled>
             <BoardStyled size={size}>
                 {cells.map((data, index) => (
                     <Cell

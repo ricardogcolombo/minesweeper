@@ -11,7 +11,9 @@ export const BoardStyled = styled.div`
 `;
 
 export const BoardContainerStyled = styled.div`
-    width: 50%;
+    @media (min-width: 800px) {
+       width: 50%;
+    }
     margin: auto;
 `;
 
