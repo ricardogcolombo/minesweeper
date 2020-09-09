@@ -28,12 +28,22 @@ The following is a list of items (prioritized from most important to least impor
  
 ## Deliverables we expect:
 * URL where the game can be accessed and played (use any platform of your preference: heroku.com, aws.amazon.com, etc)
-* Code in a public Github repo
-* README file with the decisions taken and important notes
+*
 
-## Time Spent
-You need to fully complete the challenge. We suggest not spending more than 5 days total.  Please make commits as often as possible so we can see the time you spent and please do not make one commit.  We will evaluate the code and time spent.
- 
-What we want to see is how well you handle yourself given the time you spend on the problem, how you think, and how you prioritize when time is sufficient to solve everything.
 
-Please email your solution as soon as you have completed the challenge or the time is up.
+## install client 
+Inside the folder run `npm run i` and then `npm run start`
+You should add the `REACT_APP_BE_HOST` environment varialbe into a .env file with the backend host
+
+
+## install server
+Inside the folder run `npm run i` and then `npm run start:dev` (start:prod for production)
+You have a .env.sample file to create your .env.dev / .env.prod files in order to complete your environment variables for the database and run the web server
+
+
+# Stack
+Client :React
+Backend: Node, Express, Mariadb
+
+The project uses jwt token and you should have your tables created in your database for login and register.
+
