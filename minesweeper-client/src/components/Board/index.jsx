@@ -1,5 +1,5 @@
 import React, {useContext, useState, useEffect} from "react";
-import {BoardContainerStyled, BoardStyled} from "./styled";
+import {TimerStyled,BoardContainerStyled, BoardStyled} from "./styled";
 import Cell from "../Cell";
 import {getGame, saveGame} from "../../hooks";
 import {StateContext} from "../../context/index";
@@ -7,25 +7,44 @@ import {clearNeightbours} from "./utils";
 import {useHistory} from "react-router-dom";
 import {Button, Modal} from "antd";
 
+import "./Board.css";
 const Board = () => {
     const history = useHistory();
     const {
-        state: {tokenId, gameinfo},
+        state: {userData, gameinfo},
+        dispatch,
     } = useContext(StateContext);
     const [cells, setCells] = useState([]);
     const [mines, setMines] = useState(0);
     const [totalMines, setTotalMines] = useState(1);
     const [size, setSize] = useState(1);
+    const [time, setTime] = useState(false);
+    const [isActive, setIsActive] = useState(false);
     useEffect(() => {
-        if (!tokenId) {
+        if (!userData) {
             history.push("/");
+        } else {
+            getGame({gameinfo}).then((data) => {
+                setTotalMines(data.mines);
+                setCells(data.board);
+                setSize(data.size);
+                setTime(data.time || 0);
+                setIsActive(true);
+            });
         }
-        getGame({gameinfo, tokenId}).then((data) => {
-            setTotalMines(data.mines);
-            setCells(data.board);
-            setSize(data.size);
-        });
     }, []);
+
+    useEffect(() => {
+        let interval = null;
+        if (isActive) {
+            interval = setInterval(() => {
+                setTime((time) => time + 1);
+            }, 1000);
+        } else if (!isActive && time !== 0) {
+            clearInterval(interval);
+        }
+        return () => clearInterval(interval);
+    }, [isActive, time]);
 
     useEffect(() => {
         if (mines === totalMines) {
@@ -62,8 +81,11 @@ const Board = () => {
         let newCells = clearNeightbours(cells, key, size);
         setCells(newCells);
     };
+    const onBackGame = () => {
+        history.push("/");
+    };
     const onSaveGame = () => {
-        saveGame({tokenId, gameinfo: {...gameinfo, board: cells}}).then(() => {
+        saveGame({gameinfo: {...gameinfo, time: time, board: cells}}).then(() => {
             history.push("/");
         });
     };
@@ -79,7 +101,8 @@ const Board = () => {
 
     return (
         <BoardContainerStyled>
-            <BoardStyled size={8}>
+            <div>{time && <TimerStyled>{`Time: ${Math.trunc(time / 60)} min:${time % 60} sec`}</TimerStyled>}</div>
+            <BoardStyled size={size}>
                 {cells.map((data, index) => (
                     <Cell
                         value={data.value}
@@ -94,8 +117,11 @@ const Board = () => {
                     />
                 ))}
             </BoardStyled>
-            <Button type="primary" onClick={onSaveGame} block>
+            <Button className={"saveButton"} type="primary" onClick={onSaveGame} block>
                 SAVE GAME
+            </Button>
+            <Button type="primary" onClick={onBackGame} block>
+                BACK TO HOME
             </Button>
         </BoardContainerStyled>
     );

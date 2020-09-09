@@ -11,7 +11,7 @@ function App() {
           <Router>
               <Switch>
                 <Route exact path="/" ><MainView /></Route>
-                <Route exact path="/Game" ><GameView /></Route>
+                <Route exact path="/game" ><GameView /></Route>
               </Switch>
           </Router>
       </StateProvider>

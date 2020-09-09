@@ -5,7 +5,7 @@ import {useHistory} from "react-router-dom";
 
 const CreateGame = () => {
     const {
-        state: {tokenId},
+        state: {userData},
         dispatch
     } = useContext(StateContext);
     const [size, setSize] = useState(8);
@@ -18,8 +18,8 @@ const CreateGame = () => {
             time:0,
             size,
             mines,
-        },tokenId}})
-        history.push("/Game");
+        },userData}})
+        history.push("/game");
     };
 
     const sizeOptions = [
@@ -43,7 +43,7 @@ const CreateGame = () => {
 
     return (
         <div>
-            {tokenId&&
+            {userData&&
                 <div>
                     <Row gutter={[16, 24]}>
                         <Col span={12}>

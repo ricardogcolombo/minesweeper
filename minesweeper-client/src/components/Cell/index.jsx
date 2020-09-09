@@ -8,7 +8,6 @@ const Cell = (props) => {
     useEffect(() => {
         let newValue = "";
         if (!visible) {
-            //TODO REMOVE THIS
             if (flag) {
                 newValue = "🚩";
             }

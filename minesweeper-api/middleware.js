@@ -20,7 +20,7 @@ const initBasicMiddleware= (app, HOST, PORT) =>{
     };
     const swaggerDoc = swaggerJsDoc(swaggerOps);
     app.use(bodyParser.json());
-    app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDoc));
+    app.use("/api/v1/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 }
 
 checkDuplicateUsernameOrEmail = (req, res, next) => {

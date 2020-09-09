@@ -14,3 +14,9 @@ export const BoardContainerStyled = styled.div`
     width: 50%;
     margin: auto;
 `;
+
+
+export const TimerStyled = styled.div`
+    font-size:30px;
+    text-align:center;
+`;

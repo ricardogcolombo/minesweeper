@@ -7,33 +7,33 @@ import {useHistory} from "react-router-dom";
 const Games = () => {
     const history = useHistory()
     const {
-        state: {userid},
+        state: {userData},
         dispatch,
     } = useContext(StateContext);
     const [data,setData] = useState([])
 
     useEffect(()=>{
-        if(userid)
-            getGames(userid).then(games=>{
+        if(userData)
+            getGames().then(games=>{
                 if(games.length)
                     setData(games)
             })
-    },[userid])
+    },[userData])
     const loadGame= (id)=>{
         dispatch({type:'SET_GAMEINFO',payload:{gameinfo:{
             gameId:id,
-        },userid}})
+        },userData}})
         history.push("/Game");
     }
 
     return (
         <div>
-            {userid && (
+            {userData&& (
                 <List
                     itemLayout="horizontal"
                     dataSource={data}
                     renderItem={(item) => (
-                        <List.Item onClick={()=>loadGame(item.gameid)} >
+                        <List.Item onClick={()=>loadGame(item.gameId)} >
                             <List.Item.Meta 
                                 avatar={<Avatar src="https://cdn.iconscout.com/icon/premium/png-64-thumb/minesweeper-game-1181583.png" />}
                                 title={item.gameid}
