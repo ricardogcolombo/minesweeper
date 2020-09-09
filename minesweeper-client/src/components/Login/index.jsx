@@ -1,7 +1,6 @@
 import React, {useEffect, useState, useContext} from "react";
 import {StateContext} from "../../context/index";
 import {LoginWrapper} from "./styled";
-import "ant-design-pro/dist/ant-design-pro.css"; // Import whole style
 
 import {Tabs, Form, Input, Button, Alert} from "antd";
 import {login, register} from "../../hooks";
